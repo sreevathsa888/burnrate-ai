@@ -1,0 +1,6 @@
+﻿pandas
+numpy
+lifelines
+scikit-learn
+matplotlib
+jupyter
