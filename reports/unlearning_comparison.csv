@@ -1,0 +1,4 @@
+scenario,n_companies,concordance_index
+Original,98280,0.768717938976465
+Single-record unlearning,98279,0.7687148219265001
+Multi-record unlearning (n=982),97297,0.7764974754024636

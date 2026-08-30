@@ -1,0 +1,22 @@
+id,name,category_code,status,founded_at,closed_at,funding_total_usd,matches_public_record
+c:189169,OK YO,ecommerce,operating,2009-08-01,,0.0,yes
+c:266748,Nice Entertainment Group,games_video,acquired,1969-01-01,,0.0,yes
+c:44771,Boxcar,software,acquired,2009-06-23,,150000.0,yes
+c:7733,blogrunner,web,acquired,,,0.0,yes
+c:253253,Spoonjuice,mobile,operating,,,0.0,yes
+c:76820,Docudesk,software,operating,2001-01-01,,0.0,yes
+c:171048,Attender,mobile,operating,2011-08-01,,25000.0,yes
+c:28494,Vebnet Holdings,software,acquired,2000-01-01,,0.0,yes
+c:31701,Tube2Tone,mobile,operating,2009-08-19,,90000.0,yes
+c:282424,Eta Consults,consulting,operating,2011-11-01,,0.0,unclear
+c:16822,Audiko,mobile,operating,2007-02-18,,0.0,yes
+c:84715,ArcSoft,software,operating,1994-03-01,,20000000.0,yes
+c:164801,Oopsly,advertising,operating,,,0.0,unclear
+c:42384,Zolo Technologies,hardware,operating,1999-01-01,,17500000.0,yes
+c:54512,GayaShopping,search,operating,2009-06-01,,0.0,unclear
+c:283072,Log & Roll,analytics,operating,2013-11-26,,0.0,unclear
+c:27917,SimpliSafe,security,operating,,,0.0,yes
+c:232922,Wine Ring,hospitality,operating,2012-01-01,,875017.0,yes
+c:44914,Likebees,web,operating,2010-01-01,,0.0,yes
+c:21890,HelpersMarket.com,ecommerce,operating,2008-04-01,,0.0,unclear
+

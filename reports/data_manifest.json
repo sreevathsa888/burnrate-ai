@@ -1,0 +1,22 @@
+{
+  "objects_slim.csv": {
+    "sha256": "24c4cdc79f43020e3c98fab18f7e39eb01cf3a5b12f63fa8db3dc7a2f531c47d",
+    "size_bytes": 13747419,
+    "verified_at": "2026-08-30 21:09:12"
+  },
+  "funding_rounds.csv": {
+    "sha256": "f622ea495d1909cfb347635edd4ccee52d91da7936e579380e34b4f95c8f5643",
+    "size_bytes": 13134510,
+    "verified_at": "2026-08-30 21:09:12"
+  },
+  "acquisitions.csv": {
+    "sha256": "5a89ca0f75502c335f67c0e0b91ab65872c6ed5ae987db8fb003683fadc51d93",
+    "size_bytes": 2099350,
+    "verified_at": "2026-08-30 21:09:12"
+  },
+  "ipos.csv": {
+    "sha256": "0e610556b450b9bfb031479e35a63e29aefcf66b7f3b023f1c20fbcc26e406f4",
+    "size_bytes": 143038,
+    "verified_at": "2026-08-30 21:09:12"
+  }
+}
