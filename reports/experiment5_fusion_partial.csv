@@ -1,0 +1,5 @@
+signals_used,status
+survival probability (real),included
+"cash-flow projection (real, placeholder starting-cash)",included
+anomaly rate (real),included
+distress language (NOT AVAILABLE -- no text corpus),excluded -- Phase 2b data acquisition needed

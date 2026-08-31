@@ -1,0 +1,3 @@
+model,n_companies,concordance_index
+Real/measured features only,11021,0.8105399421899819
+Real features + synthesized burn features,11021,0.8226588855068536
