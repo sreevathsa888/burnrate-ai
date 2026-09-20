@@ -111,22 +111,53 @@ if outcomes is not None and "name" in outcomes.columns:
 else:
     pool["label"] = pool["id"]
 
-pool = pool.sort_values("label").head(600)
-label_to_id = dict(zip(pool["label"], pool["id"]))
+# Most ventures in the population are genuinely low-risk, so an alphabetical list
+# surfaces flat, uninformative curves almost every time. Order by 12-month risk and
+# put the figure in the label, so the interesting cases are reachable.
+RISK_COL = ("p_exhaust_12m_cond" if "p_exhaust_12m_cond" in pool.columns
+            else "p_exhaust_12m" if "p_exhaust_12m" in pool.columns else None)
 
 with st.sidebar:
     st.markdown("<div class='lbl'>Venture</div>", unsafe_allow_html=True)
+    if RISK_COL:
+        order = st.radio("order", ["Highest risk first", "A \u2192 Z"],
+                         label_visibility="collapsed", horizontal=False)
+        if order == "Highest risk first":
+            pool = pool.sort_values(RISK_COL, ascending=False)
+            pool["label"] = pool.apply(
+                lambda r: f"{r['label']}  \u2014  {r[RISK_COL]:.0%}", axis=1)
+        else:
+            pool = pool.sort_values("label")
+    pool = pool.head(600)
+    label_to_id = dict(zip(pool["label"], pool["id"]))
     picked = st.selectbox("v", list(label_to_id), label_visibility="collapsed")
     choice = label_to_id[picked]
-    st.markdown(f"<div class='sub'>Record {choice}</div>", unsafe_allow_html=True)
+    st.markdown(
+        f"<div class='sub'>Record {choice}"
+        + (f" \u00b7 {pool.loc[pool['id'] == choice, RISK_COL].iloc[0]:.1%} chance of "
+           "exhausting cash within 12 months" if RISK_COL else "")
+        + "</div>", unsafe_allow_html=True)
     st.markdown(
         "<div class='note'>Scores are peer-derived from funding history and sector. "
         "They express relative risk against comparable ventures, not a verdict about "
         "this one.</div>", unsafe_allow_html=True)
 
 row = survival[survival["id"] == choice].iloc[0]
-p6 = float(row.get("p_exhaust_6m", np.nan))
-p12 = float(row.get("p_exhaust_12m", np.nan))
+
+# Prefer CONDITIONAL exhaustion probabilities when src/conditional_survival.py has
+# been run. The unconditional columns measure risk from founding, so for a venture
+# already years old they sit near zero for everyone and the curve is flat and
+# uninformative. The conditional form asks the question a founder actually has:
+# given we have survived this long, what happens over the next 3/6/12 months?
+COND = all(f"p_exhaust_{d}m_cond" in survival.columns for d in (3, 6, 12))
+if COND:
+    p3 = float(row["p_exhaust_3m_cond"])
+    p6 = float(row["p_exhaust_6m_cond"])
+    p12 = float(row["p_exhaust_12m_cond"])
+else:
+    p3 = np.nan
+    p6 = float(row.get("p_exhaust_6m", np.nan))
+    p12 = float(row.get("p_exhaust_12m", np.nan))
 
 state = None
 if HAVE_TIER5 and traj is not None:
@@ -150,10 +181,22 @@ left, right = st.columns([2.05, 1], gap="medium")
 
 with left:
     with st.container(border=True):
-        st.markdown("<div class='lbl'>Probability of still operating</div>",
-                    unsafe_allow_html=True)
+        heading = ("Probability of still operating, from today"
+                   if COND else "Probability of still operating, from founding")
+        st.markdown(f"<div class='lbl'>{heading}</div>", unsafe_allow_html=True)
         months = np.arange(0, 25)
-        if not np.isnan(p12):
+        if COND and not np.isnan(p12):
+            # interpolate the survival curve through the three measured points
+            # rather than assuming a single exponential rate from p12 alone
+            known_t = np.array([0.0, 3.0, 6.0, 12.0])
+            known_s = np.array([1.0, 1 - p3, 1 - p6, 1 - p12])
+            cum_h = -np.log(np.clip(known_s, 1e-6, 1.0))
+            slope = (cum_h[-1] - cum_h[-2]) / (known_t[-1] - known_t[-2])
+            h = np.interp(months, known_t, cum_h)
+            tail = months > known_t[-1]
+            h[tail] = cum_h[-1] + slope * (months[tail] - known_t[-1])
+            surv = np.exp(-h)
+        elif not np.isnan(p12):
             lam = -np.log(max(1 - p12, 1e-3)) / 12
             surv = np.exp(-lam * months)
         else:
@@ -172,7 +215,8 @@ with left:
         fig.update_layout(
             height=272, margin=dict(l=0, r=0, t=4, b=0), showlegend=False,
             paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
-            xaxis=dict(title="months from today", gridcolor=EDGE, zeroline=False,
+            xaxis=dict(title="months from today" if COND else "months from founding",
+                       gridcolor=EDGE, zeroline=False,
                        color=DIM, tickfont=dict(size=11)),
             yaxis=dict(tickformat=".0%", gridcolor=EDGE, zeroline=False, color=DIM,
                        tickfont=dict(size=11), range=[0, 1.04]))
@@ -196,6 +240,14 @@ with right:
             f"<div class='fig' style='color:{accent}'>{htxt}<span class='unit'>of 100</span></div>"
             "<div class='sub'>Fused score. Lower means more urgent.</div>",
             unsafe_allow_html=True)
+
+if not COND:
+    st.markdown(
+        "<div class='note'>This curve is measured <b>from founding</b>, so it sits near "
+        "100% for every established venture and carries little information. Run "
+        "<b>python src/conditional_survival.py</b> once to add conditional "
+        "probabilities, and this panel will show risk over the next 12 months "
+        "instead.</div>", unsafe_allow_html=True)
 
 st.markdown("<div style='height:.85rem'></div>", unsafe_allow_html=True)
 c1, c2 = st.columns([1.15, 1], gap="medium")
