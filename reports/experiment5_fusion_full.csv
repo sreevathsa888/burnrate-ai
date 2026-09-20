@@ -1,0 +1,2 @@
+signals_used,companies,auc_4signal,auc_survival_alone,auc_3signal_prev,best_subset,best_auc,verdict
+survival + cash-flow + anomaly + distress-language,1892,0.5444,0.7535,0.6162,survival,0.7535,fusion does not beat single

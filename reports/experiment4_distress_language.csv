@@ -1,0 +1,4 @@
+model,auc,macro_f1,note
+Adapted TF-IDF + logistic (this work),0.726,0.58,weak supervision from outcomes
+"Adapted model, out-of-fold",0.722,,5-fold OOF -- the score exported for fusion
+Fixed financial lexicon,0.51,,Loughran-McDonald-style negative word rate
