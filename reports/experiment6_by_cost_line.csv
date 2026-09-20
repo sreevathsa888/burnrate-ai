@@ -1,0 +1,5 @@
+cost_line,n,mean_reexecuted_wk,mean_analytic_wk,mean_abs_error_wk
+Payroll,3000,30.757,4.296,32.024
+Cloud & infra,3000,14.764,1.6,15.232
+Marketing,3000,8.743,1.075,9.057
+Tooling & SaaS,3000,4.395,0.565,4.56
