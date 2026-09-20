@@ -17,7 +17,7 @@ label, and an eventual outcome.
 |---|---|
 | 23BDS0044 | Arnav Kumar |
 | 23BDS0143 | Oleti Sree Vathsa |
-| 23BDS0197 | Hari Shree |
+| 23BDS0197 | Hari Shree P |
 
 ---
 
